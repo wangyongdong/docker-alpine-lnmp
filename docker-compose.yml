@@ -1,0 +1,68 @@
+version: '3'
+services:
+  redis:
+      image: wangyongdong/docker-redis:latest
+      ports:
+        - "36379:6379"
+      volumes:
+        - $HOME/docker/lnmp-alpine/redis/data:/data                                     # data dir
+        - $HOME/docker/lnmp-alpine/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
+  #    networks:
+  #      - backend
+      restart: always
+      container_name: redis
+
+  mysql:
+      depends_on:
+        - redis
+      image: wangyongdong/docker-mysql:latest
+      ports:
+        - "33306:3306"
+      volumes:
+        - $HOME/docker/lnmp-alpine/mysql/data:/var/lib/mysql        # data dir
+        - $HOME/docker/lnmp-alpine/mysql/log:/var/log/mysql         # errlog and slowquery
+        - $HOME/docker/lnmp-alpine/mysql/conf:/etc/mysql            # Configuration file
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+  #    networks:
+  #      - backend
+      restart: always
+      container_name: mysql
+
+  php:
+      depends_on:
+        - mysql
+      image: wangyongdong/docker-php:latest
+      ports:
+        - "9000:9000"
+      links:
+        - "mysql"
+        - "redis"
+      volumes:
+        - $HOME/docker/lnmp-alpine/php/php.ini:/etc/php7/php.ini
+        - $HOME/docker/lnmp-alpine/php/logs/error.log:/var/log/php7/error.log
+        - $HOME/docker/lnmp-alpine/php/php-fpm.conf:/etc/php7/php-fpm.conf
+        - $HOME/docker/lnmp-alpine/php/www.conf:/etc/php7/php-fpm.d/www.conf
+        - $HOME/docker/lnmp-alpine/www:/usr/local/nginx/html
+  #    networks:
+  #      - backend
+      restart: always
+      container_name: php
+
+  nginx:
+      depends_on:
+        - php
+      image: wangyongdong/docker-nginx:latest
+      ports:
+        - "80:80"
+      links:
+        - "php"
+      volumes:
+        - $HOME/docker/lnmp-alpine/www:/usr/local/nginx/html
+        - $HOME/docker/lnmp-alpine/nginx/logs:/usr/local/nginx/logs
+        - $HOME/docker/lnmp-alpine/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
+        - $HOME/docker/lnmp-alpine/nginx/conf/vhost:/usr/local/nginx/conf/vhost
+  #    networks:
+  #      - backend
+      restart: always
+      container_name: nginx

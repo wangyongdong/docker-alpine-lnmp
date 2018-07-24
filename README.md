@@ -11,7 +11,7 @@
 ### RUN
         
     - `cd xxx/`
-    - `git clone `
+    - `git clone git@github.com:wangyongdong/alpine-lnmp.git`
     - `docker-compose up -d`
     
 ### DEBUG

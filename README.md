@@ -9,9 +9,9 @@
     - 自定义挂载目录，确保挂载目录有相应的文件
     
 ### RUN
-        
-    - `cd xxx/`
-    - `git clone git@github.com:wangyongdong/alpine-lnmp.git`
+    - `mkdir -p $HOME/docker-box/ && cd $_`  创建目录并进入
+    - `git clone git@github.com:wangyongdong/alpine-lnmp.git` 克隆项目
+    - `mkdir -p $HOME/docker-box/mount-data/docker-alpine/ && cp -r $HOME/docker-box/alpine-lnmp/data/* $_` 创建挂载目录，拷贝挂载文件到挂载目录
     - `docker-compose up -d`
     
 ### DEBUG

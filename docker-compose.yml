@@ -5,8 +5,8 @@ services:
       ports:
         - "36379:6379"
       volumes:
-        - $HOME/docker-box/mount-data/docker-alpine/redis/data:/data                                     # data dir
-        - $HOME/docker-box/mount-data/docker-alpine/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
+        - ./data/docker-alpine/redis/data:/data                                     # data dir
+        - ./data/docker-alpine/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
   #    networks:
   #      - backend
       restart: always
@@ -19,9 +19,9 @@ services:
       ports:
         - "33306:3306"
       volumes:
-        - $HOME/docker-box/mount-data/docker-alpine/mysql/data:/var/lib/mysql        # data dir
-        - $HOME/docker-box/mount-data/docker-alpine/mysql/log:/var/log/mysql         # errlog and slowquery
-        - $HOME/docker-box/mount-data/docker-alpine/mysql/conf:/etc/mysql            # Configuration file
+        - ./data/docker-alpine/mysql/data:/var/lib/mysql        # data dir
+        - ./data/docker-alpine/mysql/log:/var/log/mysql         # errlog and slowquery
+        - ./data/docker-alpine/mysql/conf:/etc/mysql            # Configuration file
       environment:
         MYSQL_ROOT_PASSWORD: 123456
   #    networks:
@@ -39,11 +39,11 @@ services:
         - "mysql"
         - "redis"
       volumes:
-        - $HOME/docker-box/mount-data/docker-alpine/php/php.ini:/etc/php7/php.ini
-        - $HOME/docker-box/mount-data/docker-alpine/php/logs/error.log:/var/log/php7/error.log
-        - $HOME/docker-box/mount-data/docker-alpine/php/php-fpm.conf:/etc/php7/php-fpm.conf
-        - $HOME/docker-box/mount-data/docker-alpine/php/www.conf:/etc/php7/php-fpm.d/www.conf
-        - $HOME/docker-box/mount-data/docker-alpine/www:/usr/local/nginx/html
+        - ./data/docker-alpine/php/php.ini:/etc/php7/php.ini
+        - ./data/docker-alpine/php/logs/error.log:/var/log/php7/error.log
+        - ./data/docker-alpine/php/php-fpm.conf:/etc/php7/php-fpm.conf
+        - ./data/docker-alpine/php/www.conf:/etc/php7/php-fpm.d/www.conf
+        - ./data/docker-alpine/www:/usr/local/nginx/html
   #    networks:
   #      - backend
       restart: always
@@ -58,10 +58,10 @@ services:
       links:
         - "php"
       volumes:
-        - $HOME/docker-box/mount-data/docker-alpine/www:/usr/local/nginx/html
-        - $HOME/docker-box/mount-data/docker-alpine/nginx/logs:/usr/local/nginx/logs
-        - $HOME/docker-box/mount-data/docker-alpine/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
-        - $HOME/docker-box/mount-data/docker-alpine/nginx/conf/vhost:/usr/local/nginx/conf/vhost
+        - ./data/docker-alpine/www:/usr/local/nginx/html
+        - ./data/docker-alpine/nginx/logs:/usr/local/nginx/logs
+        - ./data/docker-alpine/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
+        - ./data/docker-alpine/nginx/conf/vhost:/usr/local/nginx/conf/vhost
   #    networks:
   #      - backend
       restart: always

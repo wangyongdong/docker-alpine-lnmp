@@ -46,6 +46,14 @@
     - `cd alpine-lnmp`
     - `docker-compose up -d` RUN
 
+#### Composer
+    
+    PHP 容器已经安装 Composer，使用时进入到容器内部执行
+    
+    `docker exec -it php /bin/sh`
+    
+    然后进入对应目录执行：`composer update`
+    
 ### Test
 
     - 127.0.0.1     访问链测试

@@ -14,17 +14,43 @@
 ### Directory
 ```text
 /
-├── data                    配置文件目录
-│   ├── mysql               mysql 目录
-│   ├── nginx               nginx 目录
-│   ├── php                 php 目录
-│   ├── redis               redis 目录
-│   ├── www                 PHP代码目录
-│   ├── nginx.conf          Nginx默认配置文件
-│   ├── mysql.cnf           MySQL用户配置文件
-│   ├── php-fpm.conf        PHP-FPM配置文件（部分会覆盖php.ini配置）
-│   └── php.ini             PHP默认配置文件
-├── docker-compose.yml       docker-compose 文件
+├── data                                               数据挂载目录
+│   ├──mysql                                          MySql挂载目录
+│   │   ├── conf                                     配置文件目录
+│   │   │   ├── my.cnf                              配置文件，在 Dockerfile 中指定，可修改配置后执行
+│   │   ├── data                                     数据目录
+│   │   ├── logs                                     日志目录
+│   │   │   ├── error.log                           错误日志，可以在 my.cnf 中配置
+│   │   │   ├── slow_query.log                      慢查询日志，可以在 my.cnf 中配置
+│   │ 
+│   ├── nginx                                         Nginx挂载目录
+│   │   ├── conf                                     配置文件目录
+│   │   │   ├── nginx.conf                          配置文件，在 Dockerfile 中指定，可修改配置后执行
+│   │   │   ├── vhost                               虚拟主机配置文件
+│   │   │   │    ├── www.site-https.com.conf       虚拟主机配置示例
+│   │   │   │    ├── www.site-test.com.conf        虚拟主机配置示例
+│   │   ├── logs                                     日志目录
+│   │   │   ├── access.log                          日志文件，可以在 nginx.conf 中配置
+│   │   │   ├── error.log                           日志文件，可以在 nginx.conf 中配置
+│   │ 
+│   ├── php                                           PHP挂载目录
+│   │   ├── conf                                     配置文件目录
+│   │   │   ├── php.ini                             配置文件，在 Dockerfile 中指定，可修改配置后执行
+│   │   │   ├── php-fpm.conf                        配置文件，可修改配置后执行
+│   │   │   ├── www.conf                            配置文件，可修改配置后执行
+│   │   ├── logs                                     日志目录
+│   │   │   ├── error.log                           日志文件，可以在 php-fpm.conf 中配置
+│   │   
+│   ├── redis                                         REDIS挂载目录
+│   │   ├── conf                                     配置文件目录
+│   │   │   ├── redis.conf                          配置文件，在 Dockerfile 中指定，密码在此修改，可修改配置后执行
+│   │   ├── data                                     数据目录
+│   │   ├── logs                                     日志目录
+│   │   │   ├── redis.log                           日志文件，可以在 redis.conf 中配置
+│   │   
+│   ├── www                                           代码存放目录
+│
+├── docker-compose.yml                                 docker-compose 文件
 ```
 
 ### Custom
@@ -58,7 +84,7 @@
 
     - 127.0.0.1     访问链测试
     - 127.0.0.1/mysql.php 测试mysql，默认使用容器名连接，可以修改连接ip地址
-    - 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址
+    - 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址，redis密码在配置文件中修改
     
 ### DEBUG
 

@@ -1,0 +1,7 @@
+/data/mysql/data/
+/data/mysql/logs/
+/data/redis/data/
+/data/redis/logs/
+/data/nginx/conf/vhost/
+/data/nginx/logs/
+/data/www

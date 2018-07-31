@@ -4,11 +4,12 @@ services:
       image: wangyongdong/docker-redis:latest
       ports:
         - "36379:6379"
+      networks:
+        - net-redis
       volumes:
-        - ./data/docker-alpine/redis/data:/data                                     # data dir
-        - ./data/docker-alpine/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
-  #    networks:
-  #      - backend
+        - ./data/redis/data:/data                                     # data dir
+        - ./data/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
+        - ./data/redis/logs/redis.log:/usr/local/logs/redis.log       # logs file
       restart: always
       container_name: redis
 
@@ -18,14 +19,14 @@ services:
       image: wangyongdong/docker-mysql:latest
       ports:
         - "33306:3306"
+      networks:
+        - net-mysql
       volumes:
-        - ./data/docker-alpine/mysql/data:/var/lib/mysql        # data dir
-        - ./data/docker-alpine/mysql/log:/var/log/mysql         # errlog and slowquery
-        - ./data/docker-alpine/mysql/conf:/etc/mysql            # Configuration file
+        - ./data/mysql/data:/var/lib/mysql        # data dir
+        - ./data/mysql/logs:/var/log/mysql        # errlog and slowquery
+        - ./data/mysql/conf:/etc/mysql            # Configuration file
       environment:
         MYSQL_ROOT_PASSWORD: 123456
-  #    networks:
-  #      - backend
       restart: always
       container_name: mysql
 
@@ -35,17 +36,19 @@ services:
       image: wangyongdong/docker-php:latest
       ports:
         - "9000:9000"
-      links:
-        - "mysql"
-        - "redis"
+#      links:
+#        - "mysql"
+#        - "redis"
+      networks:
+            - net-php
+            - net-mysql
+            - net-redis
       volumes:
-        - ./data/docker-alpine/php/php.ini:/etc/php7/php.ini
-        - ./data/docker-alpine/php/logs/error.log:/var/log/php7/error.log
-        - ./data/docker-alpine/php/php-fpm.conf:/etc/php7/php-fpm.conf
-        - ./data/docker-alpine/php/www.conf:/etc/php7/php-fpm.d/www.conf
-        - ./data/docker-alpine/www:/usr/local/nginx/html
-  #    networks:
-  #      - backend
+        - ./data/php/conf/php.ini:/etc/php7/php.ini
+        - ./data/php/conf/php-fpm.conf:/etc/php7/php-fpm.conf
+        - ./data/php/conf/www.conf:/etc/php7/php-fpm.d/www.conf
+        - ./data/php/logs/error.log:/etc/php7/logs/error.log
+        - ./data/www:/usr/local/nginx/html
       restart: always
       container_name: php
 
@@ -55,14 +58,18 @@ services:
       image: wangyongdong/docker-nginx:latest
       ports:
         - "80:80"
-      links:
-        - "php"
+#      links:
+#        - "php"
+      networks:
+        - net-php
       volumes:
-        - ./data/docker-alpine/www:/usr/local/nginx/html
-        - ./data/docker-alpine/nginx/logs:/usr/local/nginx/logs
-        - ./data/docker-alpine/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
-        - ./data/docker-alpine/nginx/conf/vhost:/usr/local/nginx/conf/vhost
-  #    networks:
-  #      - backend
+        - ./data/www:/usr/local/nginx/html
+        - ./data/nginx/logs:/usr/local/nginx/logs
+        - ./data/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
+        - ./data/nginx/conf/vhost:/usr/local/nginx/conf/vhost
       restart: always
       container_name: nginx
+networks:
+  net-php:
+  net-mysql:
+  net-redis:

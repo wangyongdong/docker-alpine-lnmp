@@ -58,6 +58,7 @@ services:
       image: wangyongdong/docker-nginx:latest
       ports:
         - "80:80"
+        - "443:443"
 #      links:
 #        - "php"
       networks:
@@ -67,6 +68,7 @@ services:
         - ./data/nginx/logs:/usr/local/nginx/logs
         - ./data/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
         - ./data/nginx/conf/vhost:/usr/local/nginx/conf/vhost
+        - ./data/nginx/cert:/usr/local/nginx/cert
       restart: always
       container_name: nginx
 networks:

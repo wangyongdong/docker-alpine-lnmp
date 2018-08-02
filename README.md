@@ -24,6 +24,7 @@
 │   │   │   ├── slow_query.log                      慢查询日志，可以在 my.cnf 中配置
 │   │ 
 │   ├── nginx                                         Nginx挂载目录
+│   │   ├── cert                                     HTTPS证书文件目录
 │   │   ├── conf                                     配置文件目录
 │   │   │   ├── nginx.conf                          配置文件，在 Dockerfile 中指定，可修改配置后执行
 │   │   │   ├── vhost                               虚拟主机配置文件
@@ -79,6 +80,14 @@
     `docker exec -it php /bin/sh`
     
     然后进入对应目录执行：`composer update`
+
+### HTTPS
+
+      - 1. 将证书文件分别命名为 `nginx_ssl.pem`，`nginx_ssl.key`，存放在 `data/nginx/cert` 目录下
+      - 2. 修改 `nginx.conf` 或 虚拟主机配置文件 `vhost/www.xxx.conf`，示例查于 `www.site-https.com.conf`
+      - 3. 修改 `www.site-https.com.conf` 去掉 `default_server` ，不去掉的话会报错
+      - 4. `docker-compose up -d`
+      - 5. 输入 `https://xxx` 测试
     
 ### Test
 

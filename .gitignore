@@ -3,6 +3,5 @@
 /data/redis/data/
 /data/redis/logs/
 /data/nginx/conf/vhost/
-/data/nginx/cert/
 /data/nginx/logs/
 /data/www

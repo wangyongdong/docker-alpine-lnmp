@@ -5,3 +5,4 @@
 /data/nginx/conf/vhost/
 /data/nginx/cert/
 /data/nginx/logs/
+/data/www

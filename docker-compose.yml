@@ -71,7 +71,22 @@ services:
         - ./data/nginx/cert:/usr/local/nginx/cert
       restart: always
       container_name: nginx
+
+  nodejs:
+        depends_on:
+          - nginx
+        image: wangyongdong/docker-nodejs:latest
+        ports:
+          - "3000:3000"
+        networks:
+          - net-nodejs
+        volumes:
+          - ./data/www:/app/src
+        restart: always
+        container_name: nodejs
+
 networks:
   net-php:
   net-mysql:
   net-redis:
+  net-nodejs:

@@ -1,2 +1,4 @@
 *
 !.gitignore
+slow_query.log
+error.log

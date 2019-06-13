@@ -1,2 +1,7 @@
 *
 !.gitignore
+*.key
+*.pem
+*.crt
+!nginx_ssl.key
+!nginx_ssl.pem

@@ -120,4 +120,16 @@
     - `docker inspect xxx` 查看运行容器ip
     - `docker network ls` 查看网络
     
+    - docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container id>
+    - docker inspect <container id>
+    - docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container id>
+
+    - 获取所有容器名称及其IP地址
+    docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)
+
+    - 使用docker-compose命令是：
+    docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+
+    - 显示所有容器IP地址：
+    docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
 

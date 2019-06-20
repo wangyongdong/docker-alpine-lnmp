@@ -100,6 +100,8 @@
 - 6. `docker-compose up -d`
 - 7. 测试是否nginx容器可以ping通v2ray容器
 
+参考[v2ray-tls-web](https://github.com/wangyongdong/v2ray-tls-web/blob/master/README.md)
+
 ### Test
 
     - 127.0.0.1     访问链测试

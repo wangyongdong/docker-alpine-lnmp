@@ -96,9 +96,10 @@
 - 2. cp -R ./data/v2ray-tls-web/nginx/conf/vhost/v2ray.conf ./data/alpine-lnmp/data/nginx/conf/vhost/
 - 3. cp -R ./data/v2ray-tls-web/nginx/cert/v2ray.* ./data/alpine-lnmp/data/nginx/cert/
 - 4. 修改 `docker-compose.yml` v2ray的端口
-- 5. 配置config.json、v2ray.conf
-- 6. `docker-compose up -d`
-- 7. 测试是否nginx容器可以ping通v2ray容器
+- 5. 配置config.json `port` `listen` `id` `path`
+- 6. 配置v2ray.conf `server_name` `location` `proxy_pass` `root` （先查询IP `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'`）
+- 7. `docker-compose up -d`
+- 8. 测试是否nginx容器可以ping通v2ray容器
 
 参考[v2ray-tls-web](https://github.com/wangyongdong/v2ray-tls-web/blob/master/README.md)
 
@@ -108,7 +109,7 @@
     - 127.0.0.1/mysql.php 测试mysql，默认使用容器名连接，可以修改连接ip地址
     - 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址，redis密码在配置文件中修改
     -  `docker exec -it nginx ping v2ray` 查看ngxin是否可以链接到v2ray
-    - 查看IP `docker inspect --format='{{.NetworkSettings.IPAddress}}' v2ray`
+    - 查看IP `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' v2ray`
     - 修改 v2ray.conf 的 proxy_pass IP地址，然后再次测试
     
 ### DEBUG

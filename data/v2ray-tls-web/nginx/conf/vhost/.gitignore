@@ -1,0 +1,4 @@
+*
+!.gitignore
+*.conf
+!v2ray.conf

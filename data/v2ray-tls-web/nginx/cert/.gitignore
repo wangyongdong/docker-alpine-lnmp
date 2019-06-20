@@ -1,0 +1,7 @@
+*
+!.gitignore
+*.key
+*.pem
+*.crt
+!v2ray.key
+!v2ray.crt

@@ -88,12 +88,20 @@
       - 3. 修改 `www.site-https.com.conf` 去掉 `default_server` ，不去掉的话会报错
       - 4. `docker-compose up -d`
       - 5. 输入 `https://xxx` 测试
+
+### v2ray
+    - cp -R ./data/v2ray-tls-web/html/www.seeyd.com/ ./data/alpine-lnmp/data/www
+    - cp -R ./data/v2ray-tls-web/nginx/conf/vhost/v2ray.conf ./data/alpine-lnmp/data/nginx/conf/vhost/
+    - cp -R ./data/v2ray-tls-web/nginx/cert/v2ray.* ./data/alpine-lnmp/data/nginx/cert/
     
 ### Test
 
     - 127.0.0.1     访问链测试
     - 127.0.0.1/mysql.php 测试mysql，默认使用容器名连接，可以修改连接ip地址
     - 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址，redis密码在配置文件中修改
+    -  `docker exec -it nginx ping v2ray` 查看ngxin是否可以链接到v2ray
+    - 查看IP `docker inspect --format='{{.NetworkSettings.IPAddress}}' v2ray`
+    - 修改 v2ray.conf 的 proxy_pass IP地址，然后再次测试
     
 ### DEBUG
 
@@ -101,5 +109,6 @@
     - `docker-compose stop` 停止容器
     - `docker-compose rm` 删除容器
     - `docker inspect xxx` 查看运行容器ip
+    - `docker network ls` 查看网络
     
 

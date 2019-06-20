@@ -36,13 +36,10 @@ services:
       image: wangyongdong/docker-php:latest
       ports:
         - "9000:9000"
-#      links:
-#        - "mysql"
-#        - "redis"
       networks:
-            - net-php
-            - net-mysql
-            - net-redis
+          - net-php
+          - net-mysql
+          - net-redis
       volumes:
         - ./data/php/conf/php.ini:/etc/php7/php.ini
         - ./data/php/conf/php-fpm.conf:/etc/php7/php-fpm.conf
@@ -52,6 +49,18 @@ services:
       restart: always
       container_name: php
 
+  v2ray:
+    image: v2ray/dev
+    ports:
+      - "10080:10080"
+    networks:
+      - net-v2ray
+    volumes:
+      - ./data/v2ray-tls-web/v2ray/config.json:/etc/v2ray/config.json
+      - ./data/v2ray-tls-web/v2ray/logs:/var/log/v2ray
+    restart: always
+    container_name: v2ray
+
   nginx:
       depends_on:
         - php
@@ -59,10 +68,9 @@ services:
       ports:
         - "80:80"
         - "443:443"
-#      links:
-#        - "php"
       networks:
         - net-php
+        - net-v2ray
       volumes:
         - ./data/www:/usr/local/nginx/html
         - ./data/nginx/logs:/usr/local/nginx/logs
@@ -90,3 +98,4 @@ networks:
   net-mysql:
   net-redis:
   net-nodejs:
+  net-v2ray:

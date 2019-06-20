@@ -1,0 +1,8 @@
+www.sitename.com
+{
+  log ./caddy.log
+  proxy /ray v2ray:10080 {
+    websocket
+    header_upstream -Origin
+  }
+}

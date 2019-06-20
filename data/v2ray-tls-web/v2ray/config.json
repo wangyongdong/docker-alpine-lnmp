@@ -1,0 +1,34 @@
+{
+ "log" : {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 10080,
+      "listen":"127.0.0.1",//只监听 127.0.0.1，避免其他机器探测到开放端口，docker时，删除此项
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "12345678-1234-12345-1234-123456789abc", // https://www.uuidgenerator.net/
+            "alterId": 64
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+        "path": "/ray"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}

@@ -58,7 +58,6 @@ services:
     volumes:
       - ./data/v2ray-tls-web/v2ray/config.json:/etc/v2ray/config.json
       - ./data/v2ray-tls-web/v2ray/logs:/var/log/v2ray
-    restart: always
     container_name: v2ray
 
   nginx:

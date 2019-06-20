@@ -90,10 +90,16 @@
       - 5. 输入 `https://xxx` 测试
 
 ### v2ray
-    - cp -R ./data/v2ray-tls-web/html/www.seeyd.com/ ./data/alpine-lnmp/data/www
-    - cp -R ./data/v2ray-tls-web/nginx/conf/vhost/v2ray.conf ./data/alpine-lnmp/data/nginx/conf/vhost/
-    - cp -R ./data/v2ray-tls-web/nginx/cert/v2ray.* ./data/alpine-lnmp/data/nginx/cert/
-    
+
+若要配置使用v2ray
+- 1. cp -R ./data/v2ray-tls-web/html/www.seeyd.com/ ./data/alpine-lnmp/data/www
+- 2. cp -R ./data/v2ray-tls-web/nginx/conf/vhost/v2ray.conf ./data/alpine-lnmp/data/nginx/conf/vhost/
+- 3. cp -R ./data/v2ray-tls-web/nginx/cert/v2ray.* ./data/alpine-lnmp/data/nginx/cert/
+- 4. 修改 `docker-compose.yml` v2ray的端口
+- 5. 配置config.json、v2ray.conf
+- 6. `docker-compose up -d`
+- 7. 测试是否nginx容器可以ping通v2ray容器
+
 ### Test
 
     - 127.0.0.1     访问链测试

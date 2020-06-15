@@ -56,80 +56,84 @@
 
 ### Custom
     
-    - 自定义端口
-    - 自定义数据库密码
-    - 自定义redis密码
-    - 自定义挂载目录，确保挂载目录有相应的文件
+- 自定义端口
+- 自定义数据库密码
+- 自定义redis密码
+- 自定义挂载目录，确保挂载目录有相应的文件
 
 ### Require
 
-    - `git`
-    - `docker`
-    - `docker-compose`
+- `git`
+- `docker`
+- `docker-compose`
     
 ### Use
 
-    - `git clone git@github.com:wangyongdong/alpine-lnmp.git` 克隆项目
-    - `cd alpine-lnmp`
-    - `docker-compose up -d` RUN
+- `git clone git@github.com:wangyongdong/alpine-lnmp.git` 克隆项目
+- `cd alpine-lnmp`
+- `docker-compose up -d` RUN
 
 #### Composer
     
-    PHP 容器已经安装 Composer，使用时进入到容器内部执行
-    
-    `docker exec -it php /bin/sh`
-    
-    然后进入对应目录执行：`composer update`
+PHP 容器已经安装 Composer，使用时进入到容器内部执行
+
+`docker exec -it php /bin/sh`
+
+然后进入对应目录执行：`composer update`
 
 ### HTTPS
-
-      - 1. 将证书文件分别命名为 `nginx_ssl.pem`，`nginx_ssl.key`，存放在 `data/nginx/cert` 目录下
-      - 2. 修改 `nginx.conf` 或 虚拟主机配置文件 `vhost/www.xxx.conf`，示例查于 `www.site-https.com.conf`
-      - 3. 修改 `www.site-https.com.conf` 去掉 `default_server` ，不去掉的话会报错
-      - 4. `docker-compose up -d`
-      - 5. 输入 `https://xxx` 测试
+    
+- 1. 将证书文件分别复制到 `data/nginx/cert` 目录下
+- 2. 修改 虚拟主机配置文件 `vhost/www.xxx.conf`，示例查于 `www.site-https.com.conf`，配置 `ssl_certificate` 和 `ssl_certificate_key` 配置
+- 4. `docker-compose up -d`
+- 5. 输入 `https://xxx` 测试
 
 ### v2ray
 
 若要配置使用v2ray
-- 1. cp -R ./data/v2ray-tls-web/html/www.seeyd.com/ ./data/alpine-lnmp/data/www
-- 2. cp -R ./data/v2ray-tls-web/nginx/conf/vhost/v2ray.conf ./data/alpine-lnmp/data/nginx/conf/vhost/
-- 3. cp -R ./data/v2ray-tls-web/nginx/cert/v2ray.* ./data/alpine-lnmp/data/nginx/cert/
+- 1. 复制文件夹：`cp -R ./data/v2ray-tls-web/html/v2ray ./data/www`
+- 2. 复制v2ray的nginx配置文件：`cp -R ./data/v2ray-tls-web/nginx/conf/vhost/v2ray.conf ./data/nginx/conf/vhost/`
+- 3. 复制v2ray的ssl证书：`cp -R ./data/v2ray-tls-web/nginx/cert/v2ray.* ./data/nginx/cert/`
 - 4. 修改 `docker-compose.yml` v2ray的端口
-- 5. 配置config.json `port` `listen` `id` `path`
-- 6. 配置v2ray.conf `server_name` `location` `proxy_pass` `root` （先查询IP `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'`）
-- 7. `docker-compose up -d`
-- 8. 测试是否nginx容器可以ping通v2ray容器
+- 5. 配置 `v2ray-tls-web/v2ray/config.json` 
+    - `port` 监听端口，与 `docker-compose.yml` 里的 `v2ray->ports` 一致
+    - 配置客户端连接`id`,支持多个
+    - `path` 最终使用的v2ray路径
+    - `shadowsocks` 配置修改
+- 6. 配置 `nginx/conf/vhost/v2ray.conf` 
+    - `server_name` 访问的地址
+    - `location` 访问路径，与 V2Ray 配置中的 path 保持一致
+    - `proxy_pass` ip地址与开放端口，ip地址需要运行容器后，查询ip `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' v2ray`，端口与 `config.json` 一致即可
+    - `root` https直接访问域名会被/匹配，响应自己的网页
+- 7. 运行 `docker-compose up -d`
+- 8. 测试nginx容器是否可以ping通v2ray容器 `docker exec -it nginx ping v2ray` 
+- 9. 修改 v2ray.conf 的 proxy_pass IP地址，然后再次测试
 
 参考[v2ray-tls-web](https://github.com/wangyongdong/v2ray-tls-web/blob/master/README.md)
 
 ### Test
 
-    - 127.0.0.1     访问链测试
-    - 127.0.0.1/mysql.php 测试mysql，默认使用容器名连接，可以修改连接ip地址
-    - 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址，redis密码在配置文件中修改
-    -  `docker exec -it nginx ping v2ray` 查看ngxin是否可以链接到v2ray
-    - 查看IP `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' v2ray`
-    - 修改 v2ray.conf 的 proxy_pass IP地址，然后再次测试
+- 127.0.0.1 访问链测试
+- 127.0.0.1/mysql.php 测试mysql，默认使用容器名连接，可以修改连接ip地址
+- 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址，redis密码在配置文件中修改
     
 ### DEBUG
 
-    - `docker-compose ps` 查看运行容器
-    - `docker-compose stop` 停止容器
-    - `docker-compose rm` 删除容器
-    - `docker inspect xxx` 查看运行容器ip
-    - `docker network ls` 查看网络
-    
-    - docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container id>
-    - docker inspect <container id>
-    - docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container id>
+- `docker-compose ps` 查看运行容器
+- `docker-compose stop` 停止容器
+- `docker-compose rm` 删除容器
+- `docker inspect xxx` 查看运行容器ip
+- `docker network ls` 查看网络
 
-    - 获取所有容器名称及其IP地址
-    docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)
+- docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container id>
+- docker inspect <container id>
+- docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container id>
 
-    - 使用docker-compose命令是：
-    docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+- 获取所有容器名称及其IP地址
+docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)
 
-    - 显示所有容器IP地址：
-    docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+- 使用docker-compose命令是：
+docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
 
+- 显示所有容器IP地址：
+docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)

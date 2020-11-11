@@ -118,22 +118,3 @@ PHP 容器已经安装 Composer，使用时进入到容器内部执行
 - 127.0.0.1/redis.php 测试redis，默认使用容器名连接，可以修改连接ip地址，redis密码在配置文件中修改
     
 ### DEBUG
-
-- `docker-compose ps` 查看运行容器
-- `docker-compose stop` 停止容器
-- `docker-compose rm` 删除容器
-- `docker inspect xxx` 查看运行容器ip
-- `docker network ls` 查看网络
-
-- `docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container id>`
-- `docker inspect <container id>`
-- `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container id>`
-
-- 获取所有容器名称及其IP地址
-`docker inspect -f '{{.Name}} - {{.NetworkSettings.IPAddress }}' $(docker ps -aq)`
-
-- 使用docker-compose命令是：
-`docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)`
-
-- 显示所有容器IP地址：
-`docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)`

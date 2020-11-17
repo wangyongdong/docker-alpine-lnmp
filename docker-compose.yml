@@ -1,100 +1,96 @@
 version: '3'
 services:
   redis:
-      image: wangyongdong/docker-redis:latest
-      ports:
-        - "36379:6379"
-      networks:
-        - net-redis
-      volumes:
-        - ./data/redis/data:/data                                     # data dir
-        - ./data/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
-        - ./data/redis/logs/redis.log:/usr/local/logs/redis.log       # logs file
-      restart: always
-      container_name: redis
+    image: wangyongdong/docker-redis:latest
+    ports:
+      - "36379:6379"
+    networks:
+      - net-web
+    volumes:
+      - ./data/redis/data:/data                                     # data dir
+      - ./data/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
+      - ./data/redis/logs/redis.log:/usr/local/logs/redis.log       # logs file
+    restart: always
+    container_name: redis
 
   mysql:
-      depends_on:
-        - redis
-      image: wangyongdong/docker-mysql:latest
-      ports:
-        - "33306:3306"
-      networks:
-        - net-mysql
-      volumes:
-        - ./data/mysql/data:/var/lib/mysql        # data dir
-        - ./data/mysql/logs:/var/log/mysql        # errlog and slowquery
-        #- ./data/mysql/conf:/etc/mysql            # Configuration file
-      environment:
-        MYSQL_ROOT_PWD: 123456
-      restart: always
-      container_name: mysql
+    depends_on:
+      - redis
+    image: wangyongdong/docker-mysql:latest
+    ports:
+      - "33306:3306"
+    networks:
+      - net-web
+    volumes:
+      - ./data/mysql/data:/var/lib/mysql        # data dir
+      - ./data/mysql/logs:/var/log/mysql        # errlog and slowquery
+      #- ./data/mysql/conf:/etc/mysql            # Configuration file
+    environment:
+      - MYSQL_ROOT_PWD=123456
+    restart: always
+    container_name: mysql
+
+  mongodb:
+    depends_on:
+      - redis
+    image: wangyongdong/docker-mongodb:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - net-web
+    volumes:
+      - ./data/mongodb/db:/data/db              # data dir
+      - ./data/mongodb/log:/data/log            # log dir
+    restart: always
+    container_name: mongodb
 
   php:
-      depends_on:
-        - mysql
-      image: wangyongdong/docker-php:latest
-      ports:
-        - "9000:9000"
-      networks:
-          - net-php
-          - net-mysql
-          - net-redis
-      volumes:
-        - ./data/php/conf/php.ini:/etc/php7/php.ini
-        - ./data/php/conf/php-fpm.conf:/etc/php7/php-fpm.conf
-        - ./data/php/conf/www.conf:/etc/php7/php-fpm.d/www.conf
-        - ./data/php/logs/error.log:/etc/php7/logs/error.log
-        - ./data/www:/usr/local/nginx/html
-      restart: always
-      container_name: php
-
-  v2ray:
-    image: v2ray/dev
+    depends_on:
+      - mysql
+    image: wangyongdong/docker-php:latest
     ports:
-      - "10080:10080"
+      - "9000:9000"
     networks:
-      - net-v2ray
+      - net-web
     volumes:
-      - ./data/v2ray-tls-web/v2ray/config.json:/etc/v2ray/config.json
-      - ./data/v2ray-tls-web/v2ray/logs:/var/log/v2ray
-    container_name: v2ray
+      - ./data/php/conf/php.ini:/etc/php7/php.ini
+      - ./data/php/conf/php-fpm.conf:/etc/php7/php-fpm.conf
+      - ./data/php/conf/www.conf:/etc/php7/php-fpm.d/www.conf
+      - ./data/php/logs/error.log:/etc/php7/logs/error.log
+      - ./data/www:/usr/local/nginx/html
+    restart: always
+    container_name: php
 
   nginx:
-      depends_on:
-        - php
-      image: wangyongdong/docker-nginx:latest
-      ports:
-        - "80:80"
-        - "443:443"
-      networks:
-        - net-php
-        - net-v2ray
-      volumes:
-        - ./data/www:/usr/local/nginx/html
-        - ./data/nginx/logs:/usr/local/nginx/logs
-        - ./data/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
-        - ./data/nginx/conf/vhost:/usr/local/nginx/conf/vhost
-        - ./data/nginx/cert:/usr/local/nginx/cert
-      restart: always
-      container_name: nginx
+    depends_on:
+      - php
+    image: wangyongdong/docker-nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - net-web
+    volumes:
+      - ./data/www:/usr/local/nginx/html
+      - ./data/nginx/logs:/usr/local/nginx/logs
+      - ./data/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf
+      - ./data/nginx/conf/vhost:/usr/local/nginx/conf/vhost
+      - ./data/nginx/cert:/usr/local/nginx/cert
+    restart: always
+    container_name: nginx
 
   nodejs:
-        depends_on:
-          - nginx
-        image: wangyongdong/docker-nodejs:latest
-        ports:
-          - "3000:3000"
-        networks:
-          - net-nodejs
-        volumes:
-          - ./data/www:/app/src
-        restart: always
-        container_name: nodejs
+    depends_on:
+      - nginx
+    image: wangyongdong/docker-nodejs:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - net-web
+    volumes:
+      - ./data/www:/app/src
+    restart: always
+    container_name: nodejs
 
 networks:
-  net-php:
-  net-mysql:
-  net-redis:
-  net-nodejs:
-  net-v2ray:
+  net-web:

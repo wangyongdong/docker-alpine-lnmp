@@ -1,5 +1,2 @@
 *
 !.gitignore
-*.conf
-!www.site-https.com.conf.bak
-!www.site-test.com.conf.bak

@@ -24,9 +24,9 @@ services:
       volumes:
         - ./data/mysql/data:/var/lib/mysql        # data dir
         - ./data/mysql/logs:/var/log/mysql        # errlog and slowquery
-        - ./data/mysql/conf:/etc/mysql            # Configuration file
+        #- ./data/mysql/conf:/etc/mysql            # Configuration file
       environment:
-        MYSQL_ROOT_PASSWORD: 123456
+        MYSQL_ROOT_PWD: 123456
       restart: always
       container_name: mysql
 

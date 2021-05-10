@@ -6,6 +6,7 @@ services:
       - "36379:6379"
     networks:
       - net-web
+    privileged: true
     volumes:
       - ./data/redis/data:/data                                     # data dir
       - ./data/redis/conf/redis.conf:/usr/local/redis/redis.conf    # Configuration file
@@ -21,6 +22,7 @@ services:
       - "33306:3306"
     networks:
       - net-web
+    privileged: true
     volumes:
       - ./data/mysql/data:/var/lib/mysql        # data dir
       - ./data/mysql/logs:/var/log/mysql        # errlog and slowquery
@@ -38,6 +40,7 @@ services:
       - "27017:27017"
     networks:
       - net-web
+    privileged: true
     volumes:
       - ./data/mongodb/db:/data/db              # data dir
       - ./data/mongodb/log:/data/log            # log dir
@@ -52,6 +55,7 @@ services:
       - "9000:9000"
     networks:
       - net-web
+    privileged: true
     volumes:
       - ./data/php/conf/php.ini:/etc/php7/php.ini
       - ./data/php/conf/php-fpm.conf:/etc/php7/php-fpm.conf
@@ -70,6 +74,7 @@ services:
       - "443:443"
     networks:
       - net-web
+    privileged: true
     volumes:
       - ./data/www:/usr/local/nginx/html
       - ./data/nginx/logs:/usr/local/nginx/logs
@@ -87,6 +92,7 @@ services:
       - "3000:3000"
     networks:
       - net-web
+    privileged: true
     volumes:
       - ./data/www:/app/src
     restart: always
